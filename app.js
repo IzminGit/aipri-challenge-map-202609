@@ -4,6 +4,7 @@ const $ = (s) => document.querySelector(s);
 window.addEventListener('DOMContentLoaded', async () => {
   bindTabs();
   bindControls();
+  setupDateFilter();
   render();
   await refresh(true);
 });
@@ -28,26 +29,31 @@ function bindControls() {
 
 async function refresh(initial) {
   $('#refreshBtn').disabled = true;
-  $('#sourceStamp').textContent = initial ? '公式情報を取得中…' : '更新中…';
+  $('#sourceStamp').textContent = initial ? '公式情報を更新中…' : '更新中…';
   try {
     const response = await fetch('/api/refresh?event_id=10', { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    state.data = await response.json();
+    const refreshed = await response.json();
+    if (!refreshed?.shops?.length) throw new Error('empty event data');
+    state.data = refreshed;
     setupDateFilter();
     render();
     $('#sourceStamp').textContent = `公式取得 ${formatTimestamp(state.data.fetchedAt)} / ${state.data.shops.length}店舗`;
   } catch (error) {
-    $('#sourceStamp').textContent = '公式情報を取得できませんでした（再試行してください）';
+    const count = state.data?.shops?.length || 0;
+    $('#sourceStamp').textContent = `同梱初期データ ${count}店舗（公式更新は再試行できます）`;
   } finally {
     $('#refreshBtn').disabled = false;
   }
 }
 
 function setupDateFilter() {
+  if (!state.data?.shops) return;
   const dates = [...new Set(state.data.shops.flatMap((s) => s.events.map((e) => e.date)).filter(Boolean))].sort();
   const select = $('#dateFilter');
+  const previous = state.date;
   select.innerHTML = '<option value="all">すべて</option>' + dates.map((d) => `<option value="${d}">${formatDate(d)}</option>`).join('');
-  if (!dates.includes(state.date)) state.date = 'all';
+  state.date = dates.includes(previous) ? previous : 'all';
   select.value = state.date;
 }
 
@@ -103,17 +109,11 @@ function calendarUrl(shop, event) {
   return u.toString();
 }
 
-function routeUrl(shop) {
-  const u = new URL('https://www.google.com/maps/dir/');
-  u.searchParams.set('api', '1');
-  u.searchParams.set('destination', `${shop.name} ${shop.address}`);
-  u.searchParams.set('travelmode', 'transit');
-  return u.toString();
-}
+function routeUrl(shop) { const u = new URL('https://www.google.com/maps/dir/'); u.searchParams.set('api','1'); u.searchParams.set('destination',`${shop.name} ${shop.address}`); u.searchParams.set('travelmode','transit'); return u.toString(); }
 function mapsUrl(shop) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name} ${shop.address}`)}`; }
 function firstEventKey(events) { const e = [...events].sort((a,b) => `${a.date} ${a.startTime}`.localeCompare(`${b.date} ${b.startTime}`))[0]; return `${e?.date || '9999-12-31'} ${e?.startTime || '99:99'}`; }
 function eventText(e) { return [e.label,e.dateDisplay,e.ageLimit,e.startTime,e.registrationTime,e.lotteryTime,e.note].join(' '); }
-function timeMatches(value) { if (state.time === 'all') return true; const m = String(value || '').match(/(\d{1,2}):(\d{2})/); if (!m) return false; const n = +m[1] * 60 + +m[2]; if (state.time === 'morning') return n < 720; if (state.time === 'midday') return n >= 720 && n < 840; return n >= 840; }
+function timeMatches(value) { if (state.time === 'all') return true; const m = String(value || '').match(/(\d{1,2}):(\d{2})/); if (!m) return false; const n = +m[1]*60 + +m[2]; if (state.time === 'morning') return n < 720; if (state.time === 'midday') return n >= 720 && n < 840; return n >= 840; }
 function formatDate(s) { if (!s) return '未記載'; return new Intl.DateTimeFormat('ja-JP',{month:'numeric',day:'numeric',weekday:'short',timeZone:'Asia/Tokyo'}).format(new Date(`${s}T00:00:00+09:00`)); }
 function formatTimestamp(s) { return s ? new Intl.DateTimeFormat('ja-JP',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Tokyo'}).format(new Date(s)) : '未記録'; }
 function addDay(s) { const d = new Date(`${s}T00:00:00+09:00`); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); }
