@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>アイプリチャレンジマップ 2026年9月</title>
+  <meta name="description" content="2026年9月開催のお店でアイプリチャレンジの開催店舗を検索できるマップ">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="kicker">AIPRI EVENT FINDER</p>
+        <h1>アイプリチャレンジマップ</h1>
+        <p class="subtitle">2026年9月 メルヘンフェスコーデ</p>
+      </div>
+      <div class="source-box">
+        <span id="sourceStamp">公式情報を読み込み中…</span>
+        <a id="sourceLink" href="https://aipri.jp/event/e2608271/" target="_blank" rel="noopener">公式イベント</a>
+        <button id="refreshBtn" type="button">↻ 更新</button>
+      </div>
+    </header>
+
+    <section class="challenge-info">
+      <div><strong>開催日</strong><span>9/12・13・19・20・21・22・23・26・27</span></div>
+      <div><strong>課題曲</strong><span>TOP POWER（うた♪ナナ エマ）</span></div>
+      <div><strong>参加費</strong><span>200円 / 定員30名</span></div>
+    </section>
+
+    <nav class="tabs" aria-label="表示切替">
+      <button class="tab is-active" data-tab="current">2026年9月開催分</button>
+      <button class="tab" data-tab="info">参加ルール</button>
+    </nav>
+
+    <main>
+      <section id="currentPanel">
+        <div class="controls">
+          <label>検索<input id="searchInput" type="search" placeholder="店舗名・住所・備考"></label>
+          <label>開催日<select id="dateFilter"><option value="all">すべて</option></select></label>
+          <label>年齢制限<select id="ageFilter"><option value="all">すべて</option><option>年齢無制限</option><option>中学生以下</option></select></label>
+          <label>受付時間<select id="timeFilter"><option value="all">すべて</option><option value="morning">午前</option><option value="midday">12〜13時台</option><option value="late">14時以降</option></select></label>
+          <label>並び順<select id="sortFilter"><option value="date">日付</option><option value="name">店舗名</option></select></label>
+        </div>
+        <div class="summary"><strong id="resultCount">0店舗</strong><span id="eventCount">0大会</span></div>
+        <div id="shopList" class="shop-list"></div>
+      </section>
+
+      <section id="infoPanel" hidden class="info-panel">
+        <h2>参加ルール</h2>
+        <ul>
+          <li>参加費は200円（税込）。ゲーム前にアイプリカード2枚が配出されます。</li>
+          <li>1開催につき、1人1回まで参加申込みできます。</li>
+          <li>定員を超える場合は抽選です。</li>
+          <li>課題曲は「TOP POWER（うた♪ナナ エマ）」固定です。</li>
+          <li>1枚プレイまたは2枚プレイを選択できます。</li>
+          <li>セーブコード（ミラーパクト、セーブカード、WEBセーブカード等）は使用可能です。</li>
+          <li>開催日時・実施方法は店舗によって異なるため、参加前に公式情報を確認してください。</li>
+        </ul>
+        <p><a href="https://aipri.jp/event/e2608271/" target="_blank" rel="noopener">公式イベントページを見る</a></p>
+      </section>
+    </main>
+  </div>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
