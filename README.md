@@ -1,24 +1,34 @@
-# アイプリチャレンジマップ 2026年9月
+# メルヘンフェスコーデ｜アイプリチャレンジマップ
 
-2026年9月開催「お店でアイプリチャレンジ！メルヘンフェスコーデをゲット」の開催店舗を探すWebアプリです。
+2026年9月開催「メルヘンフェスコーデをゲット！ お店でアイプリチャレンジ」の開催店舗を、一覧と地図で確認できる非公式サイトです。
 
-## 公式情報
+## 開く
 
-- イベント: https://aipri.jp/event/e2608271/
-- 開催店舗検索: https://aipri.jp/event/search.html?event_id=10
-- 課題曲: TOP POWER（うた♪ナナ エマ）
-- 参加費: 200円
-- 定員: 1開催30名
-- 開催日: 2026年9月12日、13日、19日、20日、21日、22日、23日、26日、27日
+`index.html` をブラウザで開くと静的版として使えます。
 
-## 特徴
+現在地取得と最新取得を安定して使う場合は、同梱サーバーで起動します。
 
-- 全国の開催店舗を公式サイトから取得
-- 店舗名・住所検索
-- 開催日、年齢制限、受付時間帯で絞り込み
-- 日付・店舗名・距離順で並び替え
-- Googleマップ、経路、Googleカレンダーへのリンク
+```powershell
+& 'C:\Users\USER\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' .\tools\local-server.mjs
+```
 
-## 開発・公開
+起動後に `http://127.0.0.1:4173/` を開きます。
 
-Vercelで公開する想定です。画面表示時に `/api/refresh` から公式開催店舗情報を取得します。
+## 最新情報を取得
+
+Vercel上ではヘッダー右上の更新ボタンが `/api/refresh` を呼び出し、公式ページから最新情報を取得します。
+
+ローカルサーバー起動中も同じボタンで公式ページを再取得します。
+
+手動更新する場合:
+
+```powershell
+& 'C:\Users\USER\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' .\tools\refresh-data.mjs
+```
+
+手動更新した結果を初期表示データとして残す場合は、生成された `event-data.json` と `data.js` をコミットします。
+
+## データ元
+
+- 店舗・大会情報: [公式の開催店舗検索ページ](https://aipri.jp/event/search.html?event_id=10)
+- 緯度経度: 国土地理院 住所検索API

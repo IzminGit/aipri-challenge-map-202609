@@ -1,15 +1,43 @@
 {
   "version": 2,
   "builds": [
-    {"src":"index.html","use":"@vercel/static"},
-    {"src":"styles.css","use":"@vercel/static"},
-    {"src":"app.js","use":"@vercel/static"},
-    {"src":"data.js","use":"@vercel/static"},
-    {"src":"api/refresh.mjs","use":"@vercel/node"}
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "styles.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "app.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "data.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "event-data.json",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/refresh.mjs",
+      "use": "@vercel/node"
+    }
   ],
   "routes": [
-    {"src":"/api/refresh","dest":"/api/refresh.mjs"},
-    {"src":"/","dest":"/index.html"},
-    {"src":"/(.*)","dest":"/$1"}
+    {
+      "src": "/api/refresh",
+      "dest": "/api/refresh.mjs"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }

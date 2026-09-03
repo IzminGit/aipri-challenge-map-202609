@@ -1,4 +1,4 @@
-window.AIPRI_EVENT_DATA = {
+{
   "eventName": "メルヘンフェスコーデをゲット！ お店でアイプリチャレンジ",
   "prefecture": "全国",
   "prefectures": [
@@ -12970,4 +12970,4 @@ window.AIPRI_EVENT_DATA = {
     }
   ],
   "generatedAt": "2026-09-03T14:20:34.564Z"
-};
+}

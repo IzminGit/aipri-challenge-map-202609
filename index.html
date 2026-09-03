@@ -1,67 +1,128 @@
 <!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>アイプリチャレンジマップ 2026年9月</title>
-  <meta name="description" content="2026年9月開催のお店でアイプリチャレンジの開催店舗を検索できるマップ">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div>
-        <p class="kicker">AIPRI EVENT FINDER</p>
-        <h1>アイプリチャレンジマップ</h1>
-        <p class="subtitle">2026年9月 メルヘンフェスコーデ</p>
-      </div>
-      <div class="source-box">
-        <span id="sourceStamp">公式情報を読み込み中…</span>
-        <a id="sourceLink" href="https://aipri.jp/event/e2608271/" target="_blank" rel="noopener">公式イベント</a>
-        <button id="refreshBtn" type="button">↻ 更新</button>
-      </div>
-    </header>
-
-    <section class="challenge-info">
-      <div><strong>開催日</strong><span>9/12・13・19・20・21・22・23・26・27</span></div>
-      <div><strong>課題曲</strong><span>TOP POWER（うた♪ナナ エマ）</span></div>
-      <div><strong>参加費</strong><span>200円 / 定員30名</span></div>
-    </section>
-
-    <nav class="tabs" aria-label="表示切替">
-      <button class="tab is-active" data-tab="current">2026年9月開催分</button>
-      <button class="tab" data-tab="info">参加ルール</button>
-    </nav>
-
-    <main>
-      <section id="currentPanel">
-        <div class="controls">
-          <label>検索<input id="searchInput" type="search" placeholder="店舗名・住所・備考"></label>
-          <label>開催日<select id="dateFilter"><option value="all">すべて</option></select></label>
-          <label>年齢制限<select id="ageFilter"><option value="all">すべて</option><option>年齢無制限</option><option>中学生以下</option></select></label>
-          <label>受付時間<select id="timeFilter"><option value="all">すべて</option><option value="morning">午前</option><option value="midday">12〜13時台</option><option value="late">14時以降</option></select></label>
-          <label>並び順<select id="sortFilter"><option value="date">日付</option><option value="name">店舗名</option></select></label>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>メルヘンフェスコーデ｜アイプリチャレンジマップ</title>
+    <meta name="description" content="2026年9月開催「お店でアイプリチャレンジ」の開催店舗、日時、参加条件を探せる非公式マップです。">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script defer src="data.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <p class="kicker"><span class="brand-mark" aria-hidden="true"></span> AIPRI EVENT FINDER</p>
+          <h1>アイプリチャレンジマップ</h1>
+          <p class="brand-description">メルヘンフェスコーデをゲット！ お店でアイプリチャレンジ</p>
         </div>
-        <div class="summary"><strong id="resultCount">0店舗</strong><span id="eventCount">0大会</span></div>
-        <div id="shopList" class="shop-list"></div>
+        <div class="source-box">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="sourceStamp">公式取得日時を読み込み中</span>
+          <div class="source-actions">
+            <a id="sourceLink" href="https://aipri.jp/event/search.html?event_id=10" target="_blank" rel="noopener">公式</a>
+            <button id="refreshBtn" class="icon-button source-refresh" type="button" title="最新情報を取得" aria-label="最新情報を取得">
+              <svg class="material-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A6.004 6.004 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h8V3l-3.35 3.35Z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <section class="event-hero" aria-label="イベント概要">
+        <div class="event-hero__title">
+          <span>2026.09</span>
+          <strong>メルヘンフェスコーデ</strong>
+        </div>
+        <dl class="event-facts">
+          <div><dt>開催日</dt><dd>9/12・13・19〜23・26・27</dd></div>
+          <div><dt>課題曲</dt><dd>TOP POWER（うた♪ナナ エマ）</dd></div>
+          <div><dt>参加費 / 定員</dt><dd>200円 / 1開催30名</dd></div>
+        </dl>
+        <p>年齢無制限または中学生以下。実施日時・受付方法は店舗ごとに異なります。</p>
       </section>
 
-      <section id="infoPanel" hidden class="info-panel">
-        <h2>参加ルール</h2>
-        <ul>
-          <li>参加費は200円（税込）。ゲーム前にアイプリカード2枚が配出されます。</li>
-          <li>1開催につき、1人1回まで参加申込みできます。</li>
-          <li>定員を超える場合は抽選です。</li>
-          <li>課題曲は「TOP POWER（うた♪ナナ エマ）」固定です。</li>
-          <li>1枚プレイまたは2枚プレイを選択できます。</li>
-          <li>セーブコード（ミラーパクト、セーブカード、WEBセーブカード等）は使用可能です。</li>
-          <li>開催日時・実施方法は店舗によって異なるため、参加前に公式情報を確認してください。</li>
-        </ul>
-        <p><a href="https://aipri.jp/event/e2608271/" target="_blank" rel="noopener">公式イベントページを見る</a></p>
+      <section class="controls" aria-label="検索条件">
+        <label class="field search-field">
+          <span>検索</span>
+          <input id="searchInput" type="search" autocomplete="off" placeholder="店舗名・住所・備考">
+        </label>
+
+        <div class="field field-group date-field">
+          <span>開催日</span>
+          <div id="dateFilter" class="segmented date-segmented" role="group" aria-label="開催日"></div>
+        </div>
+
+        <div class="field field-group">
+          <span>年齢制限</span>
+          <div class="segmented" role="group" aria-label="年齢制限">
+            <button class="is-active" type="button" data-age="all">すべて</button>
+            <button type="button" data-age="年齢無制限">無制限</button>
+            <button type="button" data-age="中学生以下">中学生以下</button>
+          </div>
+        </div>
+
+        <div class="field field-group time-field">
+          <span>参加受付時間帯</span>
+          <div id="timeFilter" class="segmented compact-segmented" role="group" aria-label="参加受付時間帯">
+            <button class="is-active" type="button" data-time="all">すべて</button>
+            <button type="button" data-time="morning">午前</button>
+            <button type="button" data-time="midday">12-13時台</button>
+            <button type="button" data-time="late">14時以降</button>
+          </div>
+        </div>
+
+        <div class="field field-group sort-field">
+          <span>並び順</span>
+          <div id="sortMode" class="segmented compact-segmented" role="group" aria-label="並び順">
+            <button class="is-active" type="button" data-sort="date">日付</button>
+            <button type="button" data-sort="distance">距離</button>
+            <button type="button" data-sort="name">店舗名</button>
+          </div>
+        </div>
+
+        <div class="toolbox">
+          <div class="field view-field">
+            <span>表示切替</span>
+            <div class="segmented view-switch" role="group" aria-label="表示切替">
+              <button id="listViewBtn" class="is-active" type="button" data-view="list">一覧</button>
+              <button id="mapViewBtn" type="button" data-view="map">地図</button>
+            </div>
+          </div>
+          <button id="locateBtn" class="icon-button" type="button" title="現在地を表示" aria-label="現在地を表示">
+            <svg class="material-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm8.94 3A9.004 9.004 0 0 0 13 3.06V1h-2v2.06A9.004 9.004 0 0 0 3.06 11H1v2h2.06A9.004 9.004 0 0 0 11 20.94V23h2v-2.06A9.004 9.004 0 0 0 20.94 13H23v-2h-2.06ZM12 19a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"></path>
+            </svg>
+          </button>
+        </div>
       </section>
-    </main>
-  </div>
-  <script src="data.js"></script>
-  <script src="app.js"></script>
-</body>
+
+      <section class="summary-strip" aria-live="polite">
+        <div>
+          <strong id="resultCount">0店舗</strong>
+          <span id="eventCount">0大会</span>
+        </div>
+        <div id="nearestSummary">現在地を取得すると近い順で探せます</div>
+        <div id="activeFilters">条件なし</div>
+      </section>
+
+      <main class="workspace">
+        <section id="listPanel" class="list-panel" aria-label="店舗一覧">
+          <div id="shopList" class="shop-list"></div>
+        </section>
+
+        <section id="mapPanel" class="map-panel" aria-label="地図" hidden>
+          <div id="map"></div>
+          <aside id="mapDrawer" class="map-drawer"></aside>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+  </body>
 </html>
